@@ -1,20 +1,20 @@
 import { Blockchain, SandboxContract } from '@ton-community/sandbox';
 import { toNano } from 'ton-core';
-import { Nft } from '../wrappers/Nft';
+import { NftItem } from '../wrappers/NftItem';
 import '@ton-community/test-utils';
 
-describe('Nft', () => {
+describe('NftItem', () => {
     let blockchain: Blockchain;
-    let nft: SandboxContract<Nft>;
+    let nftItem: SandboxContract<NftItem>;
 
     beforeEach(async () => {
         blockchain = await Blockchain.create();
 
-        nft = blockchain.openContract(await Nft.fromInit());
+        nftItem = blockchain.openContract(await NftItem.fromInit());
 
         const deployer = await blockchain.treasury('deployer');
 
-        const deployResult = await nft.send(
+        const deployResult = await nftItem.send(
             deployer.getSender(),
             {
                 value: toNano('0.05'),
@@ -27,7 +27,7 @@ describe('Nft', () => {
 
         expect(deployResult.transactions).toHaveTransaction({
             from: deployer.address,
-            to: nft.address,
+            to: nftItem.address,
             deploy: true,
             success: true,
         });
@@ -35,6 +35,6 @@ describe('Nft', () => {
 
     it('should deploy', async () => {
         // the check is done inside beforeEach
-        // blockchain and nft are ready to use
+        // blockchain and nftItem are ready to use
     });
 });

@@ -1,6 +1,6 @@
 import "@stdlib/deploy";
 
-contract Nft with Deployable {
+contract NftCollection with Deployable {
     init() {
         
     }
