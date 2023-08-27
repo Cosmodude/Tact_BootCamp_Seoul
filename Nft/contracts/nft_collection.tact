@@ -18,11 +18,11 @@ contract NftCollection with Deployable, Ownable  {
     }
     
     fun mint(receiver: Address){
-        require(self.next_item_index >= 0, "non-sequential NFTs");
+        require(self.next_item_index >= 0, "non-sequential NFTs"); 
         let nft_init: StateInit = self.getNftItemInit(self.next_item_index);
         send(SendParameters{
             to: contractAddress(nft_init),
-            value: ctx.value,
+            value: context().value,
             mode: SendIgnoreErrors,
             body: Transfer{
                 queryId: 0,
@@ -39,6 +39,14 @@ contract NftCollection with Deployable, Ownable  {
         let b: StringBuilder = beginString();
         b.append("Item # ");
         b.append(item_index.toString());
-        return initOf NftItem(self.owner, myAddress(), item_index, b);
+        return initOf NftItem(self.owner, myAddress(), item_index, b.toString());
+    }
+
+    get fun getCollectionData(): CollectionData{
+        return CollectionData{
+            next_item_index: self.next_item_index,
+            owner_address: self.owner,
+            collection_content: self.collection_content.asSlice().asCell()
+        };
     }
 }
