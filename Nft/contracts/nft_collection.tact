@@ -2,7 +2,7 @@ import "@stdlib/deploy";
 import "@stdlib/ownable";
 import "./nft_item.tact";
 
-contract NftCollection with Deployable, Ownable  {
+contract NftCollection with Deployable, OwnableTransferable  {
     const minTonForStorage: Int = ton("0.03");
     const gasConsumption: Int = ton("0.03");
     owner: Address;
