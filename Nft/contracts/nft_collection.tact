@@ -3,6 +3,8 @@ import "@stdlib/ownable";
 import "./nft_item.tact";
 
 contract NftCollection with Deployable, Ownable  {
+    const minTonForStorage: Int = ton("0.03");
+    const gasConsumption: Int = ton("0.03");
     owner: Address;
     next_item_index: Int as uint32 =0;
     collection_content: String;
@@ -20,6 +22,11 @@ contract NftCollection with Deployable, Ownable  {
     fun mint(receiver: Address){
         require(self.next_item_index >= 0, "non-sequential NFTs"); 
         let nft_init: StateInit = self.getNftItemInit(self.next_item_index);
+        let msgValue: Int = context().value;
+        let tonBalanceBeforeMsg: Int = myBalance() - msgValue;
+        let storageFee: Int = self.minTonForStorage - min(tonBalanceBeforeMsg, self.minTonForStorage);
+        msgValue = msgValue - (storageFee + self.gasConsumption);
+
         send(SendParameters{
             to: contractAddress(nft_init),
             value: context().value,
@@ -42,6 +49,11 @@ contract NftCollection with Deployable, Ownable  {
         return initOf NftItem(self.owner, myAddress(), item_index, b.toString());
     }
 
+
+    get fun get_nft_address_by_index(item_index: Int): Address {
+        let initCode: StateInit = self.getNftItemInit(item_index);
+        return contractAddress(initCode);
+    }
     get fun getCollectionData(): CollectionData{
         return CollectionData{
             next_item_index: self.next_item_index,
