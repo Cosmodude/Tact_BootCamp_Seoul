@@ -15,3 +15,9 @@ struct ItemData{
     item_index: Int;
     individual_content: Cell;
 }
+
+struct CollectionMetadata {
+    image: String;
+    name: String;
+    description: String;
+}
