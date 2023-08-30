@@ -24,10 +24,15 @@ contract TactHello with Deployable, OwnableTransferable {
 
     receive("say hello"){
         let reply: StringBuilder = beginString();
-        reply.append("Hello ");
+        reply.append("Hello");
         reply.append(self.name);
-
-        self.reply(reply.toString().asComment());
+        //self.reply(reply.toString().asComment());
+        send(SendParameters{
+            to: sender(),
+            value: 0,
+            mode: SendIgnoreErrors,
+            body: reply.toString().asComment()
+        });
     }
 
     get fun hello(): String{
