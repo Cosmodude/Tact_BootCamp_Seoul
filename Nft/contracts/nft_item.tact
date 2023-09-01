@@ -20,6 +20,11 @@ contract NftItem with Deployable, Ownable {
         self.individual_content = individual_content;
     }
 
+    receive(msg: Mint){
+        require(self.collection_address == sender(), "Message should come from collection");
+        self.owner = msg.receiver;
+    }
+
     receive(msg: Transfer){
         self.requireOwner();
         self.owner = msg.new_owner;

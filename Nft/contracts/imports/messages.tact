@@ -3,6 +3,11 @@ message Transfer{
     new_owner: Address;
 }
 
+message Mint{
+    receiver: Address;
+    queryId: Int;
+}
+
 struct CollectionData{
     next_item_index: Int;
     collection_content: Cell;

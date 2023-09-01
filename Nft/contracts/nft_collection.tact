@@ -1,12 +1,13 @@
 import "@stdlib/deploy";
 import "@stdlib/ownable";
 import "./nft_item.tact";
+import "./imports/messages";
 
 contract NftCollection with Deployable, OwnableTransferable  {
     const minTonForStorage: Int = ton("0.03");
     const gasConsumption: Int = ton("0.03");
     owner: Address;
-    next_item_index: Int as uint32 =0;
+    next_item_index: Int as uint32 = 0;
     collection_content: String;
 
     init() {
@@ -14,9 +15,9 @@ contract NftCollection with Deployable, OwnableTransferable  {
         self.collection_content = "TACT Bootcamp NFT";
     }
 
-    receive("Mint"){
+    receive(msg: Mint){
         self.requireOwner(); 
-        self.mint(sender());
+        self.mint(msg.receiver);
     }
     
     fun mint(receiver: Address){
@@ -31,9 +32,9 @@ contract NftCollection with Deployable, OwnableTransferable  {
             to: contractAddress(nft_init),
             value: context().value,
             mode: SendIgnoreErrors,
-            body: Transfer{
+            body: Mint{
                 queryId: 0,
-                new_owner: receiver
+                receiver: receiver
             }.toCell(),
             code: nft_init.code,
             data: nft_init.data
